@@ -1,4 +1,4 @@
-CodeMirror.defineMode("python", function(conf, parserConf) {
+CodeMirror.defineMode("python-like", function(conf, parserConf) {
     var ERRORCLASS = 'error';
 
     function wordRegexp(words) {
@@ -36,6 +36,12 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
     var py3 = {'builtins': ['ascii', 'bytes', 'exec', 'print'],
                'keywords': ['nonlocal', 'False', 'True', 'None']};
 
+    if(parserConf.extra_keywords){
+        commonBuiltins = commonBuiltins.concat(parserConf.extra_keywords);
+    }
+    if(parserConf.extra_builtins){
+        commonBuiltins = commonBuiltins.concat(parserConf.extra_builtins);
+    }
     if (!!parserConf.version && parseInt(parserConf.version, 10) === 3) {
         commonkeywords = commonkeywords.concat(py3.keywords);
         commonBuiltins = commonBuiltins.concat(py3.builtins);
@@ -289,7 +295,7 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
             }
         }
         delimiter_index = '])}'.indexOf(current);
-        if (delimiter_index !== -1) {
+        if (delimiter_index !== -1) {   
             if (dedent(stream, state, current)) {
                 return ERRORCLASS;
             }
@@ -338,4 +344,19 @@ CodeMirror.defineMode("python", function(conf, parserConf) {
     return external;
 });
 
-CodeMirror.defineMIME("text/x-python", "python");
+function mimes(ms, mode) {
+  for (var i = 0; i < ms.length; ++i) CodeMirror.defineMode(ms[i], mode);
+}
+
+mimes(["text/x-python"], {
+    name: "python-like",
+    //extra_keywords: words(cKeywords),
+});
+
+mimes(["text/x-cython"], {
+    name: "python-like",
+    //extra_keywords: words(cKeywords),
+});
+
+
+//CodeMirror.defineMIME("text/x-python", "python");
