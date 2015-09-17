@@ -7,10 +7,22 @@
 <link rel="stylesheet" href="../lib/codemirror.css">
 <script src="../lib/codemirror.js"></script>
 <script src="../addon/mode/multiplex.js"></script>
+<script src="../addon/mode/overlay.js"></script>
+<script src="../mode/markdown/markdown.js"></script>
+<script src="../mode/stex/stex.js"></script>
+<script src="../mode/gfm/gfm.js"></script>
 <script src="../mode/xml/xml.js"></script>
 <style type="text/css">
       .CodeMirror {border: 1px solid black;}
       .cm-delimit {color: #fa4;}
+      .cm-header { font-family: arial; }
+      .cm-header-1 { font-size: 150%; }
+      .cm-header-2 { font-size: 130%; }
+      .cm-header-3 { font-size: 120%; }
+      .cm-header-4 { font-size: 110%; }
+      .cm-header-5 { font-size: 100%; }
+      .cm-header-6 { font-size: 90%; }
+      .cm-strong { font-size: 140%; }
     </style>
 <div id=nav>
   <a href="http://codemirror.net"><h1>CodeMirror</h1><img id=logo src="../doc/logo.png"></a>
@@ -28,25 +40,19 @@
 <article>
 <h2>Multiplexing Parser Demo</h2>
 <form><textarea id="code" name="code">
-<html>
-  <body style="<<magic>>">
-    <h1><< this is not <html >></h1>
-    <<
-        multiline
-        not html
-        at all : &amp;amp; <link/>
-    >>
-    <p>this is html again</p>
-  </body>
-</html>
+# Header
+
+$math$ this is still header
+
+
 </textarea></form>
 
     <script>
 CodeMirror.defineMode("demo", function(config) {
   return CodeMirror.multiplexingMode(
-    CodeMirror.getMode(config, "text/html"),
-    {open: "<<", close: ">>",
-     mode: CodeMirror.getMode(config, "text/plain"),
+    CodeMirror.getMode(config, "gfm"),
+    {open: "$", close: "$",
+     mode: CodeMirror.getMode(config, "stext"),
      delimStyle: "delimit"}
     // .. more multiplexed styles can follow here
   );
